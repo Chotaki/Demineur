@@ -3,16 +3,20 @@
 
 #include <stdio.h>
 
+void rayan(char*);
+
 int main()
 {
     int i;
     int j;
-    char * tableau[100];
+    char* tableau[100];
 
     for (i = 0; i < 100; i++) 
     {
         tableau[i] = "[_]"; 
     }
+
+    rayan(&tableau);
 
     for (j = 0; j < 10; j++)
     {
@@ -26,12 +30,18 @@ int main()
     return 0;
 }
 
-int rayan()
+void rayan(char* *tableau)
 {
-    for (i = 0; i < 100; i++) 
-    {
-        tableau[10] = "[X]"; 
-    }
+   tableau[9] = "[X]";
+   tableau[25] = "[X]";
+   tableau[96] = "[X]";
+   tableau[14] = "[X]";
+   tableau[5] = "[X]";
+   tableau[85] = "[X]";
+   tableau[69] = "[X]";
+   tableau[59] = "[X]";
+   tableau[7] = "[X]";
+   tableau[55] = "[X]";
 }
 
 

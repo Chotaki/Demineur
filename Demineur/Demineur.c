@@ -5,9 +5,32 @@
 
 int main()
 {
-    printf("Hello World!\n");
+    int i;
+    int j;
+    char * tableau[100];
+
+    for (i = 0; i < 100; i++) /* boucle << classique >> pour le parcours d'un tableau */
+    {
+        tableau[i] = "[_]";  /* chaque case du tableau reçoit son indice comme valeur */
+    }
+
+    for (j = 0; j < 10; j++)
+    {
+        for (i = 0; i < 10; i++)
+        {
+            printf("%s", tableau[j*10+i]);
+        }
+        printf("\n");
+    }
+
     return 0;
 }
+
+int rayan()
+{
+
+}
+
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
 // Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage

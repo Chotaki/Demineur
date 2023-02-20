@@ -9,9 +9,9 @@ int main()
     int j;
     char * tableau[100];
 
-    for (i = 0; i < 100; i++) /* boucle << classique >> pour le parcours d'un tableau */
+    for (i = 0; i < 100; i++) 
     {
-        tableau[i] = "[_]";  /* chaque case du tableau reçoit son indice comme valeur */
+        tableau[i] = "[_]"; 
     }
 
     for (j = 0; j < 10; j++)
@@ -28,7 +28,10 @@ int main()
 
 int rayan()
 {
-
+    for (i = 0; i < 100; i++) 
+    {
+        tableau[10] = "[X]"; 
+    }
 }
 
 

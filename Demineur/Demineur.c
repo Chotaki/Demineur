@@ -73,7 +73,7 @@ void rayan(int *tableau_bombe)
 void loris(char* *tableau_jeu, int *tableau_bombe)
 {
     int i;
-    int j;
+    int j = 0;
     int indice;
     printf("Choisissez une case a creuser entre 0 et 99 :");
     scanf_s("%d", &indice);
@@ -85,15 +85,13 @@ void loris(char* *tableau_jeu, int *tableau_bombe)
         }
     }
 
-    if (tableau_bombe[j] == indice)
-    {
+    if (tableau_bombe[j] == indice) {
         printf("PERDU");
         delay(1);
         abort();
     }
     else {
         vianney(tableau_jeu,tableau_bombe,indice);
-
     }
 }
 
@@ -108,50 +106,49 @@ void antoine(char* *tableau_jeu)
 
 void vianney(char* *tableau_jeu, int* tableau_bombe, int indice)
 {
-    int j1;
-    int j2;
-    int j3;
-    int j4;
-    int j5;
-    int j6;
-    int j7;
-    int j8;
+    int j0 = 0;
+    int j1 = 0;
+    int j2 = 0;
+    int j3 = 0;
+    int j4 = 0;
+    int j5 = 0;
+    int j6 = 0;
+    int j7 = 0;
+    int j8 = 0;
 
     for (int i = 0; i < 19; i++)
     {
-        if (tableau_bombe[i] == indice - 11)
-        {
+        if (tableau_bombe[i] == indice) {
+            j0 = 1;
+        }
+        if (tableau_bombe[i] == indice - 11) {
             j1 = 1;
         }
-        if (tableau_bombe[i] == indice - 10)
-        {
+        if (tableau_bombe[i] == indice - 10) {
             j2 = 1;
         }
-        if (tableau_bombe[i] == indice - 9)
-        {
+        if (tableau_bombe[i] == indice - 9) {
             j3 = 1;
         }
-        if (tableau_bombe[i] == indice - 1)
-        {
+        if (tableau_bombe[i] == indice - 1) {
             j4 = 1;
         }
-        if (tableau_bombe[i] == indice + 1)
-        {
+        if (tableau_bombe[i] == indice + 1) {
             j5 = 1;
         }
-        if (tableau_bombe[i] == indice + 9)
-        {
+        if (tableau_bombe[i] == indice + 9) {
             j6 = 1;
         }
-        if (tableau_bombe[i] == indice + 10)
-        {
+        if (tableau_bombe[i] == indice + 10) {
             j7 = 1;
         }
-        if (tableau_bombe[i] == indice + 11)
-        {
+        if (tableau_bombe[i] == indice + 11) {
             j8 = 1;
         }
 
+    }
+    if (j0 == 0) {
+        tableau_jeu[indice] = "[0]";
     }
     if (j1 == 0) {
         tableau_jeu[indice - 11] = "[0]";
@@ -180,6 +177,8 @@ void vianney(char* *tableau_jeu, int* tableau_bombe, int indice)
     
 
 }
+
+
 
 void delay(int temps)
 {

@@ -4,24 +4,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 void rayan(int *);
-void loris(char**, int*);
+void loris(char*, int*);
 void delay(int);
-void antoine(char**);
-void vianney(char**, int*, int);
+void antoine(char*);
+/*void vianney(char*, int*, int);*/
+void william(char*, int*, int);
+void victor(char*);
 
 int main()
 {
     int i;
     int j;
-    char* tableau_jeu[100];
+    char tableau_jeu[100];
     int tableau_bombe[18];
     int choix;
 
     for (i = 0; i < 100; i++) 
     {
-        tableau_jeu[i] = "[_]"; 
+        tableau_jeu[i] = '_';
     }
 
     rayan(tableau_bombe);
@@ -32,7 +35,7 @@ int main()
         {
             for (i = 0; i < 10; i++)
             {
-                printf("%s", tableau_jeu[j*10+i]);
+                printf("[%c]", tableau_jeu[j*10+i]);
             }
             printf("\n");
         }
@@ -51,6 +54,7 @@ int main()
             antoine(tableau_jeu);
         }
 
+        victor(tableau_jeu);
         system("cls");
     }
 
@@ -70,7 +74,7 @@ void rayan(int *tableau_bombe)
     }
 }
 
-void loris(char* *tableau_jeu, int *tableau_bombe)
+void loris(char *tableau_jeu, int *tableau_bombe)
 {
     int i;
     int j = 0;
@@ -91,20 +95,21 @@ void loris(char* *tableau_jeu, int *tableau_bombe)
         abort();
     }
     else {
-        vianney(tableau_jeu,tableau_bombe,indice);
+        /*vianney(tableau_jeu,tableau_bombe,indice);*/
+        william(tableau_jeu, tableau_bombe, indice);
     }
 }
 
-void antoine(char* *tableau_jeu)
+void antoine(char *tableau_jeu)
 {
     int indice;
     printf("Choisissez une case ou poser un drapeau entre 0 et 99 :");
     scanf_s("%d", &indice);
 
-    tableau_jeu[indice] = "[4]";
+    tableau_jeu[indice] = 'P';
 }
 
-void vianney(char* *tableau_jeu, int* tableau_bombe, int indice)
+/*void vianney(char *tableau_jeu, int* tableau_bombe, int indice)
 {
     int j0 = 0;
     int j1 = 0;
@@ -115,6 +120,8 @@ void vianney(char* *tableau_jeu, int* tableau_bombe, int indice)
     int j6 = 0;
     int j7 = 0;
     int j8 = 0;
+    char* trou1 = "j";
+    char* trou2;
 
     for (int i = 0; i < 19; i++)
     {
@@ -174,11 +181,63 @@ void vianney(char* *tableau_jeu, int* tableau_bombe, int indice)
     if (j8 == 0) {
         tableau_jeu[indice + 11] = "[0]";
     }
-    
 
+
+}*/
+
+void william(char *tableau_jeu, int *tableau_bombe, int indice)
+{
+    int nb_bombe = 0;
+    char int_str[2];
+
+    for (int i = 0; i < 19; i++)
+    {
+        if (tableau_bombe[i] == indice - 11) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice - 10) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice - 9) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice - 1) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice + 1) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice + 9) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice + 10) {
+            nb_bombe ++;
+        }
+        if (tableau_bombe[i] == indice + 11) {
+            nb_bombe ++;
+        }
+    }
+
+    sprintf_s(int_str, 2, "%d", nb_bombe);
+    tableau_jeu[indice] = int_str[0];
 }
 
+void victor(char* tableau_jeu)
+{
+    int nb_cases = 0;
 
+    for (int i = 0; i < 100; i++)
+    {
+        if (tableau_jeu[i] != '_') {
+            nb_cases++;
+        }
+    }
+    if (nb_cases == 100) {
+        printf("VICTOIRE !");
+        delay(1);
+        abort();
+    }
+}
 
 void delay(int temps)
 {

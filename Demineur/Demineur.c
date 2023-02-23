@@ -10,9 +10,10 @@ void rayan(int *);
 void loris(char*, int*);
 void delay(int);
 void antoine(char*);
-/*void vianney(char*, int*, int);*/
-void william(char*, int*, int);
+void vianney(char*, int*, int);
+int william(char*, int*, int);
 void victor(char*);
+void lilian(char*, int*, int);
 
 int main()
 {
@@ -68,9 +69,20 @@ void rayan(int *tableau_bombe)
 
     for (int i = 0; i < 19; i++)
     {
+        int x = 0;
+
         indice = rand() % (100);
 
-        tableau_bombe[i] = indice;
+        for (int j = 0; j < 19; j++) {
+
+            if (tableau_bombe[j] == indice) {
+                x++;    
+            }
+        }
+
+        if (x == 0) {
+            tableau_bombe[i] = indice;
+        }
     }
 }
 
@@ -95,8 +107,7 @@ void loris(char *tableau_jeu, int *tableau_bombe)
         abort();
     }
     else {
-        /*vianney(tableau_jeu,tableau_bombe,indice);*/
-        william(tableau_jeu, tableau_bombe, indice);
+        vianney(tableau_jeu,tableau_bombe,indice);
     }
 }
 
@@ -109,117 +120,133 @@ void antoine(char *tableau_jeu)
     tableau_jeu[indice] = 'P';
 }
 
-/*void vianney(char *tableau_jeu, int* tableau_bombe, int indice)
+void vianney(char *tableau_jeu, int* tableau_bombe, int indice)
 {
-    int j0 = 0;
-    int j1 = 0;
-    int j2 = 0;
-    int j3 = 0;
-    int j4 = 0;
-    int j5 = 0;
-    int j6 = 0;
-    int j7 = 0;
-    int j8 = 0;
-    char* trou1 = "j";
-    char* trou2;
-
-    for (int i = 0; i < 19; i++)
-    {
-        if (tableau_bombe[i] == indice) {
-            j0 = 1;
-        }
-        if (tableau_bombe[i] == indice - 11) {
-            j1 = 1;
-        }
-        if (tableau_bombe[i] == indice - 10) {
-            j2 = 1;
-        }
-        if (tableau_bombe[i] == indice - 9) {
-            j3 = 1;
-        }
-        if (tableau_bombe[i] == indice - 1) {
-            j4 = 1;
-        }
-        if (tableau_bombe[i] == indice + 1) {
-            j5 = 1;
-        }
-        if (tableau_bombe[i] == indice + 9) {
-            j6 = 1;
-        }
-        if (tableau_bombe[i] == indice + 10) {
-            j7 = 1;
-        }
-        if (tableau_bombe[i] == indice + 11) {
-            j8 = 1;
-        }
-
-    }
-    if (j0 == 0) {
-        tableau_jeu[indice] = "[0]";
-    }
-    if (j1 == 0) {
-        tableau_jeu[indice - 11] = "[0]";
-    }
-    if (j2 == 0) {
-        tableau_jeu[indice - 10] = "[0]";
-    }
-    if (j3 == 0) {
-        tableau_jeu[indice - 9] = "[0]";
-    }
-    if (j4 == 0) {
-        tableau_jeu[indice - 1] = "[0]";
-    }
-    if (j5 == 0) {
-        tableau_jeu[indice + 1] = "[0]";
-    }
-    if (j6 == 0) {
-        tableau_jeu[indice + 9] = "[0]";
-    }
-    if (j7 == 0) {
-        tableau_jeu[indice + 10] = "[0]";
-    }
-    if (j8 == 0) {
-        tableau_jeu[indice + 11] = "[0]";
+    if (william(tableau_jeu, tableau_bombe, indice) == 0  && (indice + 1) % 10 != 0) {
+        william(tableau_jeu, tableau_bombe, indice);
+        lilian(tableau_jeu, tableau_bombe, indice);
     }
 
+}
 
-}*/
+void lilian(char* tableau_jeu, int* tableau_bombe, int indice)
+{
+    william(tableau_jeu, tableau_bombe, indice - 11);
+    william(tableau_jeu, tableau_bombe, indice - 10);
+    william(tableau_jeu, tableau_bombe, indice - 9);
+    william(tableau_jeu, tableau_bombe, indice - 1);
+    william(tableau_jeu, tableau_bombe, indice + 1);
+    william(tableau_jeu, tableau_bombe, indice + 9);
+    william(tableau_jeu, tableau_bombe, indice + 10);
+    william(tableau_jeu, tableau_bombe, indice + 11);
 
-void william(char *tableau_jeu, int *tableau_bombe, int indice)
+        /*if (william(tableau_jeu, tableau_bombe, indice - 11) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice - 11);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice - 10) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice - 10);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice - 9) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice - 9);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice - 1) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice - 1);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice + 1) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice + 1);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice + 9) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice + 9);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice + 10) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice + 10);
+        }
+        if (william(tableau_jeu, tableau_bombe, indice + 11) == 0) {
+            vianney(tableau_jeu, tableau_bombe, indice + 11);
+        }*/
+}
+
+
+int william(char *tableau_jeu, int *tableau_bombe, int indice)
 {
     int nb_bombe = 0;
     char int_str[2];
 
-    for (int i = 0; i < 19; i++)
-    {
-        if (tableau_bombe[i] == indice - 11) {
-            nb_bombe ++;
+    if ((indice + 1) % 10 != 0 && indice % 10 != 0) {
+        for (int i = 0; i < 19; i++)
+        {
+            if (tableau_bombe[i] == indice - 11) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice - 10) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice - 9) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice - 1) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 1) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 9) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 10) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 11) {
+                nb_bombe++;
+            }
         }
-        if (tableau_bombe[i] == indice - 10) {
-            nb_bombe ++;
+    }
+
+    if ((indice + 1) % 10 == 0) {
+        for (int i = 0; i < 19; i++)
+        {
+            if (tableau_bombe[i] == indice - 11) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice - 10) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice - 1) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 9) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 10) {
+                nb_bombe++;
+            }
         }
-        if (tableau_bombe[i] == indice - 9) {
-            nb_bombe ++;
-        }
-        if (tableau_bombe[i] == indice - 1) {
-            nb_bombe ++;
-        }
-        if (tableau_bombe[i] == indice + 1) {
-            nb_bombe ++;
-        }
-        if (tableau_bombe[i] == indice + 9) {
-            nb_bombe ++;
-        }
-        if (tableau_bombe[i] == indice + 10) {
-            nb_bombe ++;
-        }
-        if (tableau_bombe[i] == indice + 11) {
-            nb_bombe ++;
+    }
+
+    if (indice % 10 == 0) {
+        for (int i = 0; i < 19; i++)
+        {
+            if (tableau_bombe[i] == indice - 10) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice - 9) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 1) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 10) {
+                nb_bombe++;
+            }
+            if (tableau_bombe[i] == indice + 11) {
+                nb_bombe++;
+            }
         }
     }
 
     sprintf_s(int_str, 2, "%d", nb_bombe);
     tableau_jeu[indice] = int_str[0];
+    return nb_bombe;
 }
 
 void victor(char* tableau_jeu)

@@ -14,13 +14,14 @@ void vianney(char*, int*, int);
 int william(char*, int*, int);
 void victor(char*);
 void lilian(char*, int*, int);
+int danny(int*, int);
 
 int main()
 {
     int i;
     int j;
     char tableau_jeu[100];
-    int tableau_bombe[18];
+    int tableau_bombe[18] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
     int choix;
 
     for (i = 0; i < 100; i++) 
@@ -41,7 +42,7 @@ int main()
             printf("\n");
         }
 
-        for (i = 0; i < 19; i++)
+        for (i = 0; i < 18; i++)
         {
             printf("%d\n", tableau_bombe[i]);
         }
@@ -65,24 +66,47 @@ int main()
 void rayan(int *tableau_bombe)
 {
     int indice = 0;
+    int x = 0;
+    int y = 0;
     srand(time(NULL));
 
-    for (int i = 0; i < 19; i++)
-    {
-        int x = 0;
+    for (int i = 0; i < 19; i++) {
+
+        if (tableau_bombe[i] == 0) {
+            x++;
+        }
+    }
+
+    while (x > 0) {
 
         indice = rand() % (100);
 
-        for (int j = 0; j < 19; j++) {
-
-            if (tableau_bombe[j] == indice) {
-                x++;    
-            }
+        if (danny(tableau_bombe, indice) == 0) {
+            tableau_bombe[y] = indice;
+            x = x - 1;
+            y++;
         }
+    }
+    
 
-        if (x == 0) {
-            tableau_bombe[i] = indice;
+}
+
+int danny(int* tableau_bombe, int indice) {
+
+    int x = 0;
+
+    for (int i = 0; i < 19; i++) {
+        
+        if (tableau_bombe[i] == indice) {
+            x++;
         }
+    }
+
+    if (x == 0) {
+        return 0;
+    }
+    else {
+        return 1;
     }
 }
 
@@ -131,14 +155,33 @@ void vianney(char *tableau_jeu, int* tableau_bombe, int indice)
 
 void lilian(char* tableau_jeu, int* tableau_bombe, int indice)
 {
-    william(tableau_jeu, tableau_bombe, indice - 11);
-    william(tableau_jeu, tableau_bombe, indice - 10);
-    william(tableau_jeu, tableau_bombe, indice - 9);
-    william(tableau_jeu, tableau_bombe, indice - 1);
-    william(tableau_jeu, tableau_bombe, indice + 1);
-    william(tableau_jeu, tableau_bombe, indice + 9);
-    william(tableau_jeu, tableau_bombe, indice + 10);
-    william(tableau_jeu, tableau_bombe, indice + 11);
+    if ((indice + 1) % 10 != 0 && indice % 10 != 0) {
+        william(tableau_jeu, tableau_bombe, indice - 11);
+        william(tableau_jeu, tableau_bombe, indice - 10);
+        william(tableau_jeu, tableau_bombe, indice - 9);
+        william(tableau_jeu, tableau_bombe, indice - 1);
+        william(tableau_jeu, tableau_bombe, indice + 1);
+        william(tableau_jeu, tableau_bombe, indice + 9);
+        william(tableau_jeu, tableau_bombe, indice + 10);
+        william(tableau_jeu, tableau_bombe, indice + 11);
+    }
+
+    if ((indice + 1) % 10 == 0) {
+        william(tableau_jeu, tableau_bombe, indice - 11);
+        william(tableau_jeu, tableau_bombe, indice - 10);
+        william(tableau_jeu, tableau_bombe, indice - 1);
+        william(tableau_jeu, tableau_bombe, indice + 9);
+        william(tableau_jeu, tableau_bombe, indice + 10);
+    }
+
+    if (indice % 10 == 0) {
+        william(tableau_jeu, tableau_bombe, indice - 10);
+        william(tableau_jeu, tableau_bombe, indice - 9);
+        william(tableau_jeu, tableau_bombe, indice + 1);
+        william(tableau_jeu, tableau_bombe, indice + 10);
+        william(tableau_jeu, tableau_bombe, indice + 11);
+    }
+
 
         /*if (william(tableau_jeu, tableau_bombe, indice - 11) == 0) {
             vianney(tableau_jeu, tableau_bombe, indice - 11);
@@ -163,7 +206,15 @@ void lilian(char* tableau_jeu, int* tableau_bombe, int indice)
         }
         if (william(tableau_jeu, tableau_bombe, indice + 11) == 0) {
             vianney(tableau_jeu, tableau_bombe, indice + 11);
-        }*/
+        }
+        william(tableau_jeu, tableau_bombe, indice - 11);
+        william(tableau_jeu, tableau_bombe, indice - 10);
+        william(tableau_jeu, tableau_bombe, indice - 9);
+        william(tableau_jeu, tableau_bombe, indice - 1);
+        william(tableau_jeu, tableau_bombe, indice + 1);
+        william(tableau_jeu, tableau_bombe, indice + 9);
+        william(tableau_jeu, tableau_bombe, indice + 10);
+        william(tableau_jeu, tableau_bombe, indice + 11);*/
 }
 
 

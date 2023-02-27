@@ -14,17 +14,18 @@
 typedef struct Point Point;
 
 void random_bomb(Point[BOMB_COUNT]);
+void manual_bomb(Point[BOMB_COUNT]);
 void dig(char*, Point[BOMB_COUNT]);
 void delay(int);
 void flag(char*);
-//void link(char*, int*, int);
-//int bomb_around(char*, int*, int);
+void link(char*, Point[BOMB_COUNT], int, int);
+int bomb_around(char*, Point[BOMB_COUNT], int, int);
+int is_bomb(Point[BOMB_COUNT], int, int);
 void win(char*);
-//void dig_around(char*, int*, int);
+void dig_around(char*, Point[BOMB_COUNT], int, int);
 int double_finder(Point[BOMB_COUNT], int, int);
 int getIndex2D(int, int);
 void getIndex1D(int, int *, int *);
-
 
 struct Point
 {
@@ -41,7 +42,8 @@ int main()
     Point tableau_bombe[BOMB_COUNT];
     int choix;
 
-    random_bomb(tableau_bombe);
+    // random_bomb(tableau_bombe);
+    manual_bomb(tableau_bombe);
 
     for (i = 0; i < TOTAL_SIZE; i++)
     {
@@ -87,8 +89,8 @@ int getIndex2D(int x, int y)
 
 void getIndex1D(int i, int * x, int * y)
 {
-    *x = i / SIZE;
-    *y = i % SIZE;
+    *x = i / SIZE; // dizaine
+    *y = i % SIZE; // unitée
 }
 
 void random_bomb(Point tableau_bombe[BOMB_COUNT])
@@ -113,8 +115,41 @@ void random_bomb(Point tableau_bombe[BOMB_COUNT])
             b++;
         }
     }
-    
+}
 
+void manual_bomb(Point tableau_bombe[BOMB_COUNT])
+{
+    int indice_x;
+    int indice_y;
+
+    for (int i = 0; i < 18; i++) {
+        tableau_bombe[i].x = -1;
+        tableau_bombe[i].y = -1;
+    }
+
+    tableau_bombe[0].x = 0;
+    tableau_bombe[0].y = 0;
+
+    tableau_bombe[1].x = 0;
+    tableau_bombe[1].y = 1;
+
+    tableau_bombe[2].x = 0;
+    tableau_bombe[2].y = 2;
+
+    tableau_bombe[3].x = 1;
+    tableau_bombe[3].y = 0;
+
+    tableau_bombe[4].x = 1;
+    tableau_bombe[4].y = 2;
+
+    tableau_bombe[5].x = 2;
+    tableau_bombe[5].y = 0;
+
+    tableau_bombe[6].x = 2;
+    tableau_bombe[6].y = 1;
+
+    tableau_bombe[7].x = 2;
+    tableau_bombe[7].y = 2;
 }
 
 int double_finder(Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y) {
@@ -148,6 +183,7 @@ void dig(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT])
 
     for (i = 0; i < 19; i++)
     { 
+
         if (tableau_bombe[i].x == indice_x && tableau_bombe[i].y == indice_y) {
             printf("PERDU");
             delay(1);
@@ -155,7 +191,7 @@ void dig(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT])
         }
     }
 
-    //link(tableau_jeu, tableau_bombe, indice);
+    link(tableau_jeu, tableau_bombe, indice_x, indice_y);
 }
 
 void flag(char *tableau_jeu)
@@ -167,178 +203,89 @@ void flag(char *tableau_jeu)
     tableau_jeu[indice] = 'P';
 }
 
-/*void link(char* tableau_jeu, int* tableau_bombe, int indice)
+void link(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
-    if (bomb_around(tableau_jeu, tableau_bombe, indice) == 0) {
-        bomb_around(tableau_jeu, tableau_bombe, indice);
-        dig_around(tableau_jeu, tableau_bombe, indice);
-    }
+        bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
+        dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
 
 }
 
-void dig_around(char* tableau_jeu, int* tableau_bombe, int indice)
+void dig_around(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
-    if ((indice + 1) % 10 != 0 && indice % 10 != 0) {
-        bomb_around(tableau_jeu, tableau_bombe, indice - 11);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 11);
+    int x = 0;
+
+    while (x < 10) {
+
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (is_bomb(tableau_bombe, indice_x + i, indice_y + j) == 0) {
+                    bomb_around(tableau_jeu, tableau_bombe, indice_x + i, indice_y + j);
+                }
+            }
+        }
+
+        x++;
+
+        /*if (bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+        }
+        if (bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1) == 0) {
+            link(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
+        }*/
     }
-
-    if ((indice + 1) % 10 == 0) {
-        bomb_around(tableau_jeu, tableau_bombe, indice - 11);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 10);
-    }
-
-    if (indice % 10 == 0) {
-        bomb_around(tableau_jeu, tableau_bombe, indice - 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 11);
-    }
-
-    if (indice % 90 < 10) {
-        bomb_around(tableau_jeu, tableau_bombe, indice - 11);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 1);
-    }
-
-    if (indice < 10) {
-        bomb_around(tableau_jeu, tableau_bombe, indice - 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 11);
-    }
-
-
-        if (bomb_around(tableau_jeu, tableau_bombe, indice - 11) == 0) {
-            link(tableau_jeu, tableau_bombe, indice - 11);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice - 10) == 0) {
-            link(tableau_jeu, tableau_bombe, indice - 10);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice - 9) == 0) {
-            link(tableau_jeu, tableau_bombe, indice - 9);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice - 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice - 1);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice + 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice + 1);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice + 9) == 0) {
-            link(tableau_jeu, tableau_bombe, indice + 9);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice + 10) == 0) {
-            link(tableau_jeu, tableau_bombe, indice + 10);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice + 11) == 0) {
-            link(tableau_jeu, tableau_bombe, indice + 11);
-        }
-        bomb_around(tableau_jeu, tableau_bombe, indice - 11);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice - 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 1);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 9);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 10);
-        bomb_around(tableau_jeu, tableau_bombe, indice + 11);
 }
 
 
-int bomb_around(char *tableau_jeu, int *tableau_bombe, int indice)
+int is_bomb(Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
+{
+    int vrai = 0;
+
+    for (int i = 0; i < 19; i++)
+    {
+        if (tableau_bombe[i].x == indice_x && tableau_bombe[i].y == indice_y && tableau_bombe[i].x >= 0 && tableau_bombe[i].y >= 0) {
+            vrai = 1;
+        }
+    }
+    return vrai;
+}
+
+int bomb_around(char *tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
     int nb_bombe = 0;
     char int_str[2];
 
-    if ((indice + 1) % 10 != 0 && indice % 10 != 0) {
-        for (int i = 0; i < 19; i++)
+    for (int i = -1; i < 2; i++)
+    {
+        for (int j = -1; j < 2; j++)
         {
-            if (tableau_bombe[i] == indice - 11) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice - 10) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice - 9) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice - 1) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 1) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 9) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 10) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 11) {
-                nb_bombe++;
-            }
+            nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + i, indice_y + j);
         }
     }
-
-    if ((indice + 1) % 10 == 0) {
-        for (int i = 0; i < 19; i++)
-        {
-            if (tableau_bombe[i] == indice - 11) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice - 10) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice - 1) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 9) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 10) {
-                nb_bombe++;
-            }
-        }
-    }
-
-    if (indice % 10 == 0) {
-        for (int i = 0; i < 19; i++)
-        {
-            if (tableau_bombe[i] == indice - 10) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice - 9) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 1) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 10) {
-                nb_bombe++;
-            }
-            if (tableau_bombe[i] == indice + 11) {
-                nb_bombe++;
-            }
-        }
-    }
-
 
     sprintf_s(int_str, 2, "%d", nb_bombe);
-    tableau_jeu[indice] = int_str[0];
+    tableau_jeu[getIndex2D(indice_x,indice_y)] = int_str[0];
     return nb_bombe;
-}*/
+}
 
 void win(char* tableau_jeu)
 {

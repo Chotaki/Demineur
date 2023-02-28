@@ -127,29 +127,35 @@ void manual_bomb(Point tableau_bombe[BOMB_COUNT])
         tableau_bombe[i].y = -1;
     }
 
-    tableau_bombe[0].x = 0;
+    tableau_bombe[0].x = 4;
     tableau_bombe[0].y = 0;
 
-    tableau_bombe[1].x = 0;
+    tableau_bombe[1].x = 4;
     tableau_bombe[1].y = 1;
 
-    tableau_bombe[2].x = 0;
+    tableau_bombe[2].x = 4;
     tableau_bombe[2].y = 2;
 
-    tableau_bombe[3].x = 1;
-    tableau_bombe[3].y = 0;
+    tableau_bombe[3].x = 4;
+    tableau_bombe[3].y = 3;
 
-    tableau_bombe[4].x = 1;
-    tableau_bombe[4].y = 2;
+    tableau_bombe[4].x = 4;
+    tableau_bombe[4].y = 4;
 
-    tableau_bombe[5].x = 2;
-    tableau_bombe[5].y = 0;
+    tableau_bombe[5].x = 4;
+    tableau_bombe[5].y = 5;
 
-    tableau_bombe[6].x = 2;
-    tableau_bombe[6].y = 1;
+    tableau_bombe[6].x = 4;
+    tableau_bombe[6].y = 6;
 
-    tableau_bombe[7].x = 2;
-    tableau_bombe[7].y = 2;
+    tableau_bombe[7].x = 4;
+    tableau_bombe[7].y = 7;
+    
+    tableau_bombe[8].x = 4;
+    tableau_bombe[8].y = 8;
+
+    tableau_bombe[9].x = 4;
+    tableau_bombe[9].y = 9;
 }
 
 int double_finder(Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y) {
@@ -181,17 +187,23 @@ void dig(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT])
     printf("Choisissez une colone ou jouer:");
     scanf_s("%d", &indice_y);
 
-    for (i = 0; i < 19; i++)
-    { 
-
-        if (tableau_bombe[i].x == indice_x && tableau_bombe[i].y == indice_y) {
-            printf("PERDU");
-            delay(1);
-            abort();
-        }
+    if (-1 >= indice_x || indice_x >= 10 || -1 >= indice_y || indice_y >= 10) {
+        printf("Indice non valide\n");
+        delay(1);
+        dig(tableau_jeu, tableau_bombe);
     }
 
-    link(tableau_jeu, tableau_bombe, indice_x, indice_y);
+    else if (-1 < indice_x < 10 && -1 < indice_y < 10) {
+        for (i = 0; i < 19; i++)
+        {
+            if (tableau_bombe[i].x == indice_x && tableau_bombe[i].y == indice_y) {
+                printf("PERDU");
+                delay(1);
+                abort();
+            }
+        }
+        link(tableau_jeu, tableau_bombe, indice_x, indice_y);
+    }
 }
 
 void flag(char *tableau_jeu)
@@ -213,45 +225,144 @@ void link(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int 
 void dig_around(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
     int x = 0;
+    int y = 0;
 
-    while (x < 10) {
+    while (x < 2) {
 
-        for (int i = -1; i < 2; i++)
-        {
-            for (int j = -1; j < 2; j++)
+        if (indice_x == 0 && indice_y == 9) {
+            if (is_bomb(tableau_bombe, indice_x, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+            }
+        }
+        else if (indice_x == 9 && indice_y == 0) {
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            }
+        }
+        else if (indice_x == 9 && indice_y == 9) {
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+            }
+        }
+        else if (indice_x == 0 && indice_y == 0) {
+            if (is_bomb(tableau_bombe, indice_x , indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
+            }
+        }
+        else if (indice_x == 0) {
+            if (is_bomb(tableau_bombe, indice_x, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
+            }
+        }
+        else if (indice_x == 9) {
+            if (is_bomb(tableau_bombe, indice_x, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
+            }
+        }
+        else if (indice_y == 0) {
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y + 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
+            }
+        }
+        else if (indice_y == 9) {;
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1 , indice_y) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+            }
+            if (is_bomb(tableau_bombe, indice_x - 1, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x , indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+            }
+            if (is_bomb(tableau_bombe, indice_x + 1, indice_y - 1) == 0) {
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
+            }
+        }
+        else {
+            for (int i = -1; i < 2; i++)
             {
-                if (is_bomb(tableau_bombe, indice_x + i, indice_y + j) == 0) {
-                    bomb_around(tableau_jeu, tableau_bombe, indice_x + i, indice_y + j);
+                for (int j = -1; j < 2; j++)
+                {
+                    if (is_bomb(tableau_bombe, indice_x + i, indice_y + j) == 0) {
+                        bomb_around(tableau_jeu, tableau_bombe, indice_x + i, indice_y + j);
+                    }
                 }
             }
         }
-
         x++;
+    }
 
-        /*if (bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
+    if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1) == 0) {
+        if (tableau_jeu[getIndex2D(indice_x, indice_y + 2)] == '_') {
+            if (getIndex2D(indice_x, indice_y) != 99) {
+                printf("aaaa");
+                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+                dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            }
         }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y - 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
-        }
-        if (bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1) == 0) {
-            link(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
-        }*/
     }
 }
 
@@ -274,11 +385,62 @@ int bomb_around(char *tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x
     int nb_bombe = 0;
     char int_str[2];
 
-    for (int i = -1; i < 2; i++)
-    {
-        for (int j = -1; j < 2; j++)
+    if (indice_x == 0 && indice_y == 9) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y);
+    }
+    else if (indice_x == 9 && indice_y == 0) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y + 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y + 1);
+    }
+    else if (indice_x == 9 && indice_y == 9) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y - 1);
+    }
+    else if (indice_x == 0 && indice_y == 0) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y + 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y + 1);
+    }
+    else if (indice_x == 0) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x , indice_y + 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y + 1);
+    }
+    else if (indice_x == 9) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y + 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y + 1);
+    }
+    else if (indice_y == 9) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y - 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y - 1);
+    }
+    else if (indice_y == 0) {
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x - 1, indice_y + 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x, indice_y + 1);
+        nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + 1, indice_y + 1);
+
+    }
+    else {
+        for (int i = -1; i <= 1; i++)
         {
-            nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + i, indice_y + j);
+            for (int j = -1; j <= 1; j++)
+            {
+                nb_bombe = nb_bombe + is_bomb(tableau_bombe, indice_x + i, indice_y + j);
+            }
         }
     }
 

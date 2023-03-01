@@ -6,7 +6,7 @@
 #include <time.h>
 #include <string.h>
 
-#define BOMB_COUNT 18
+#define BOMB_COUNT 19
 
 #define SIZE 10
 #define TOTAL_SIZE (SIZE * SIZE)
@@ -26,6 +26,7 @@ void dig_around(char*, Point[BOMB_COUNT], int, int);
 int double_finder(Point[BOMB_COUNT], int, int);
 int getIndex2D(int, int);
 void getIndex1D(int, int *, int *);
+void spread(char*, Point[BOMB_COUNT], int, int);
 
 struct Point
 {
@@ -41,9 +42,10 @@ int main()
     char tableau_jeu[TOTAL_SIZE];
     Point tableau_bombe[BOMB_COUNT];
     int choix;
+    int app = 0;
 
-    // random_bomb(tableau_bombe);
-    manual_bomb(tableau_bombe);
+     // random_bomb(tableau_bombe);
+     manual_bomb(tableau_bombe);
 
     for (i = 0; i < TOTAL_SIZE; i++)
     {
@@ -52,21 +54,35 @@ int main()
 
     while(1)
     {
+        printf("    0  1  2  3  4  5  6  7  8  9\n");
         for (j = 0; j < SIZE; j++)
         {
+            printf(" %d ", j);
             for (i = 0; i < SIZE; i++)
             {
                 printf("[%c]", tableau_jeu[j* SIZE +i]);
             }
             printf("\n");
         }
+        printf("\n");
+        printf(" Bombe :");
+        printf("\n");
 
-        for (i = 0; i < BOMB_COUNT; i++)
+        for (i = 0; i <= BOMB_COUNT; i++)
         {
-            printf(" %d %d\n", tableau_bombe[i].x, tableau_bombe[i].y);
+            if (app <= 5) {
+                printf(" %d %d /", tableau_bombe[i].x, tableau_bombe[i].y);
+                app++;
+            }
+            else {
+                printf("\n");
+                app = 0;
+            }
         }
+        printf("\n");
+        printf("\n");
 
-        printf("Choisissez 0:creuser , 1:poser drapeau");
+        printf(" Choisissez 0:creuser , 1:poser drapeau");
         scanf_s("%d", &choix);
         if (choix == 0) {
             dig(tableau_jeu, tableau_bombe);
@@ -99,7 +115,7 @@ void random_bomb(Point tableau_bombe[BOMB_COUNT])
     int b = 0;
     srand(time(NULL));
 
-    for (int i = 0; i < BOMB_COUNT; i++) {
+    for (int i = 0; i <= BOMB_COUNT; i++) {
         a++;
     }
 
@@ -122,37 +138,37 @@ void manual_bomb(Point tableau_bombe[BOMB_COUNT])
     int indice_x;
     int indice_y;
 
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i <= BOMB_COUNT; i++) {
         tableau_bombe[i].x = -1;
         tableau_bombe[i].y = -1;
     }
 
-    tableau_bombe[0].x = 4;
+    tableau_bombe[0].x = 3;
     tableau_bombe[0].y = 0;
 
-    tableau_bombe[1].x = 4;
+    tableau_bombe[1].x = 3;
     tableau_bombe[1].y = 1;
 
-    tableau_bombe[2].x = 4;
+    tableau_bombe[2].x = 3;
     tableau_bombe[2].y = 2;
 
-    tableau_bombe[3].x = 4;
+    tableau_bombe[3].x = 3;
     tableau_bombe[3].y = 3;
 
-    tableau_bombe[4].x = 4;
+    tableau_bombe[4].x = 3;
     tableau_bombe[4].y = 4;
 
-    tableau_bombe[5].x = 4;
+    tableau_bombe[5].x = 3;
     tableau_bombe[5].y = 5;
 
-    tableau_bombe[6].x = 4;
-    tableau_bombe[6].y = 6;
+    tableau_bombe[6].x = 2;
+    tableau_bombe[6].y = 5;
 
-    tableau_bombe[7].x = 4;
-    tableau_bombe[7].y = 7;
+    tableau_bombe[7].x = 1;
+    tableau_bombe[7].y = 5;
     
-    tableau_bombe[8].x = 4;
-    tableau_bombe[8].y = 8;
+    tableau_bombe[8].x = 0;
+    tableau_bombe[8].y = 5;
 
     tableau_bombe[9].x = 4;
     tableau_bombe[9].y = 9;
@@ -182,9 +198,9 @@ void dig(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT])
     int i;
     int indice_x;
     int indice_y;
-    printf("Choisissez une ligne ou jouer:");
+    printf(" Choisissez une ligne ou jouer:");
     scanf_s("%d", &indice_x);
-    printf("Choisissez une colone ou jouer:");
+    printf(" Choisissez une colone ou jouer:");
     scanf_s("%d", &indice_y);
 
     if (-1 >= indice_x || indice_x >= 10 || -1 >= indice_y || indice_y >= 10) {
@@ -218,7 +234,8 @@ void flag(char *tableau_jeu)
 void link(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
         bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
-        dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
+        //dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
+        spread(tableau_jeu, tableau_bombe, indice_x, indice_y);
 
 }
 
@@ -226,6 +243,7 @@ void dig_around(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x
 {
     int x = 0;
     int y = 0;
+    int tmp = 0;
 
     while (x < 2) {
 
@@ -355,17 +373,51 @@ void dig_around(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x
         x++;
     }
 
-    if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1) == 0) {
-        if (tableau_jeu[getIndex2D(indice_x, indice_y + 2)] == '_') {
-            if (getIndex2D(indice_x, indice_y) != 99) {
-                printf("aaaa");
-                bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-                dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-            }
-        }
-    }
+    spread(tableau_jeu, tableau_bombe, indice_x, indice_y);
 }
 
+void spread(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
+{
+    while (bomb_around(tableau_bombe, tableau_bombe, indice_x, indice_y) == 0) {
+        bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
+        dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
+        spread(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
+        spread(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
+        spread(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
+        spread(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
+        spread(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+        spread(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
+        spread(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
+        spread(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
+    }
+
+    /*if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) == 0 && tableau_jeu[getIndex2D(indice_x, indice_y + 1)] == '_') {
+            //if (getIndex2D(indice_x, indice_y) != 99) {
+            printf("aaaa");
+            delay(1);
+            bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            spread(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+            // }
+    }
+
+    else if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) != 0 && is_bomb(tableau_bombe, indice_x + 1, 0) == 0) {
+                //if (getIndex2D(indice_x, indice_y) != 99) {
+                printf("bbbb");
+                delay(1);
+                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, 0);
+                spread(tableau_jeu, tableau_bombe, indice_x + 1, 0);
+                // }
+    }
+
+    else if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) != 0 && is_bomb(tableau_bombe, indice_x + 1, 0) == 1 && is_bomb(tableau_bombe, indice_x, indice_y + 1) == 0) {
+        //if (getIndex2D(indice_x, indice_y) != 99) {
+        printf("cccc");
+        delay(1);
+        bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+        spread(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
+        // }
+    }*/
+}
 
 int is_bomb(Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {

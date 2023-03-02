@@ -6,10 +6,9 @@
 #include <time.h>
 #include <string.h>
 
-#define BOMB_COUNT 19
-
 #define SIZE 10
 #define TOTAL_SIZE (SIZE * SIZE)
+#define BOMB_COUNT TOTAL_SIZE/5
 
 typedef struct Point Point;
 
@@ -21,7 +20,7 @@ void flag(char*);
 void link(char*, Point[BOMB_COUNT], int, int);
 int bomb_around(char*, Point[BOMB_COUNT], int, int);
 int is_bomb(Point[BOMB_COUNT], int, int);
-void win(char*);
+void win(char*, Point[BOMB_COUNT]);
 void dig_around(char*, Point[BOMB_COUNT], int, int);
 int double_finder(Point[BOMB_COUNT], int, int);
 int getIndex2D(int, int);
@@ -44,8 +43,8 @@ int main()
     int choix;
     int app = 0;
 
-     // random_bomb(tableau_bombe);
-     manual_bomb(tableau_bombe);
+     random_bomb(tableau_bombe);
+     //manual_bomb(tableau_bombe);
 
     for (i = 0; i < TOTAL_SIZE; i++)
     {
@@ -60,7 +59,12 @@ int main()
             printf(" %d ", j);
             for (i = 0; i < SIZE; i++)
             {
+                if (is_bomb(tableau_bombe, j, i) == 1) {
+                    tableau_jeu[getIndex2D(j, i)] = 'x';
+                }
+
                 printf("[%c]", tableau_jeu[j* SIZE +i]);
+
             }
             printf("\n");
         }
@@ -68,7 +72,7 @@ int main()
         printf(" Bombe :");
         printf("\n");
 
-        for (i = 0; i <= BOMB_COUNT; i++)
+        /*for (i = 0; i <= BOMB_COUNT; i++)
         {
             if (app <= 5) {
                 printf(" %d %d /", tableau_bombe[i].x, tableau_bombe[i].y);
@@ -80,7 +84,7 @@ int main()
             }
         }
         printf("\n");
-        printf("\n");
+        printf("\n");*/
 
         printf(" Choisissez 0:creuser , 1:poser drapeau");
         scanf_s("%d", &choix);
@@ -91,7 +95,7 @@ int main()
             flag(tableau_jeu);
         }
 
-        win(tableau_jeu);
+       // win(tableau_jeu, tableau_bombe);
         system("cls");
     }
 
@@ -233,7 +237,7 @@ void flag(char *tableau_jeu)
 
 void link(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
-        bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
+        //bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
         //dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
         spread(tableau_jeu, tableau_bombe, indice_x, indice_y);
 
@@ -378,45 +382,32 @@ void dig_around(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x
 
 void spread(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
 {
-    while (bomb_around(tableau_bombe, tableau_bombe, indice_x, indice_y) == 0) {
-        bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
-        dig_around(tableau_jeu, tableau_bombe, indice_x, indice_y);
-        spread(tableau_jeu, tableau_bombe, indice_x - 1, indice_y - 1);
-        spread(tableau_jeu, tableau_bombe, indice_x - 1, indice_y);
-        spread(tableau_jeu, tableau_bombe, indice_x - 1, indice_y + 1);
-        spread(tableau_jeu, tableau_bombe, indice_x, indice_y - 1);
-        spread(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-        spread(tableau_jeu, tableau_bombe, indice_x + 1, indice_y - 1);
-        spread(tableau_jeu, tableau_bombe, indice_x + 1, indice_y);
-        spread(tableau_jeu, tableau_bombe, indice_x + 1, indice_y + 1);
+    
+    //si on dépasse le tableau (x, y) on part de la fonction
+    if (!(0 <= indice_x && indice_x < 10 && 0 <= indice_y && indice_y < 10)) {
+        return;
     }
 
-    /*if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) == 0 && tableau_jeu[getIndex2D(indice_x, indice_y + 1)] == '_') {
-            //if (getIndex2D(indice_x, indice_y) != 99) {
-            printf("aaaa");
-            delay(1);
-            bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-            spread(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-            // }
+    //si la case est déjà revelé on sort de la fonction
+    else if (tableau_jeu[getIndex2D(indice_x, indice_y)] != '_') {
+        return;
     }
 
-    else if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) != 0 && is_bomb(tableau_bombe, indice_x + 1, 0) == 0) {
-                //if (getIndex2D(indice_x, indice_y) != 99) {
-                printf("bbbb");
-                delay(1);
-                bomb_around(tableau_jeu, tableau_bombe, indice_x + 1, 0);
-                spread(tableau_jeu, tableau_bombe, indice_x + 1, 0);
-                // }
+    //si la case est differente de '0' on part de la fonction
+    if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) != 0) {
+        return;
     }
 
-    else if (bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y) != 0 && is_bomb(tableau_bombe, indice_x + 1, 0) == 1 && is_bomb(tableau_bombe, indice_x, indice_y + 1) == 0) {
-        //if (getIndex2D(indice_x, indice_y) != 99) {
-        printf("cccc");
-        delay(1);
-        bomb_around(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-        spread(tableau_jeu, tableau_bombe, indice_x, indice_y + 1);
-        // }
-    }*/
+    //on rappelle spread sur les 8 cases autours
+    else {
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                 spread(tableau_jeu, tableau_bombe, indice_x + i, indice_y + j);
+            }
+        }
+    }
 }
 
 int is_bomb(Point tableau_bombe[BOMB_COUNT], int indice_x, int indice_y)
@@ -501,17 +492,23 @@ int bomb_around(char *tableau_jeu, Point tableau_bombe[BOMB_COUNT], int indice_x
     return nb_bombe;
 }
 
-void win(char* tableau_jeu)
+void win(char* tableau_jeu, Point tableau_bombe[BOMB_COUNT])
 {
     int nb_cases = 0;
+    int x = 0;
+    int y = 0;
 
     for (int i = 0; i < TOTAL_SIZE; i++)
     {
-        if (tableau_jeu[i] != '_') {
-            nb_cases++;
+        getIndex1D(i, x, y);
+
+        if (is_bomb(tableau_bombe, x, y) == 0) {
+            if (tableau_jeu[i] != '_') {
+                nb_cases++;
+            }
         }
     }
-    if (nb_cases == TOTAL_SIZE) {
+    if (nb_cases == TOTAL_SIZE - BOMB_COUNT) {
         printf("VICTOIRE !");
         delay(1);
         abort();

@@ -6,6 +6,7 @@
 #include <time.h>
 #include <string.h>
 
+
 // création de valeur général a toute les fonctions a l'aide de macro
 
 #define SIZE 10
@@ -41,7 +42,7 @@ struct Point
 
 // création de la fonction principale du démineur
 
-int main()
+int main2()
 {
     int i;
     int j;
@@ -265,7 +266,7 @@ void flag(char *tableau_jeu)
     printf("Choisissez une case ou poser un drapeau entre 0 et %d :", TOTAL_SIZE - 1);
     scanf_s("%d", &indice);
 
-    // vérification que l'indice saisie ne soit pas déjà creusée et soit dans la grille de jeu
+    // vérification que la case choisie ne soit pas déjà creusée et soit dans la grille de jeu
 
     if(tableau_jeu[indice] != '_') {
         printf("Case deja creusee\n");

@@ -18,5 +18,8 @@
     <ClCompile Include="Demineur.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Downloads\01_hello_SDL\demineur.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
